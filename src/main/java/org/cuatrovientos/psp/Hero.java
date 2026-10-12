@@ -53,6 +53,15 @@ public class Hero implements Character {
 		return random.nextInt(100) < SPECIAL_CHANCE;
 	}
 
+	public void attackBoss(Boss boss, int damage) {
+		System.out.println(ATTACK_MESSAGE);
+		boss.hit(damage);
+		if (boss.isDead()) {
+			boss.kill();
+			killedEnemies++;
+		}
+	}
+
 	public int getKilledEnemies() {
 		return killedEnemies;
 	}
