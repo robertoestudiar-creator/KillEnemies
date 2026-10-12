@@ -30,12 +30,14 @@ public class Main {
 	private static final String SAVE_FILE = "partida.dat";
 	private static final String SAVE_ERROR = "No se ha podido guardar la partida";
 	private static final String LOAD_ERROR = "No se ha podido cargar la partida";
+	private static final String TITLE_GAME = "===== KILL ENEMIES =====";
 
 	private static ArrayList<Character> characters = new ArrayList<>();
 	private static Scanner scanner = new Scanner(System.in);
 	private static Hero hero;
 
 	public static void main(String[] args) {
+		System.out.println(TITLE_GAME);
 		if (new File(SAVE_FILE).exists()) {
 			loadGame();
 		} else {
