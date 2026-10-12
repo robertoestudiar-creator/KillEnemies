@@ -169,21 +169,27 @@ public class Main {
 		return index;
 	}
 
-	private static void attackCharacter(int index) {
+	private static void attackEnemy(int index, int damage) {
 		Character character = characters.get(index);
 		if (character instanceof Boss) {
 			Boss boss = (Boss) character;
-			hero.attackBoss(boss, 1);
+			hero.attackBoss(boss, damage);
 			if (boss.isDead()) {
 				characters.remove(index);
 			}
 		} else {
-			if (character.isEnemy()) {
-				hero.attack((Enemy) character);
-			} else {
-				deadFriends++;
-			}
+			hero.attack((Enemy) character);
 			characters.remove(index);
+		}
+	}
+
+	private static void attackCharacter(int index) {
+		Character character = characters.get(index);
+		if (character.isEnemy()) {
+			attackEnemy(index, 1);
+		} else {
+			characters.remove(index);
+			deadFriends++;
 		}
 	}
 
