@@ -29,7 +29,6 @@ public class Main {
 	private static final String GAME_VERSION = "5.0";
 	private static final String SAVE_FILE = "partida.dat";
 	private static final String SAVE_ERROR = "No se ha podido guardar la partida";
-	private static final String LOAD_ERROR = "No se ha podido cargar la partida";
 	private static final String TITLE_GAME = "===== KILL ENEMIES =====";
 	private static final String TITLE_COUNT = "----- RECUENTO -----";
 	private static final String TITLE_CHARACTERS = "----- PERSONAJES -----";
@@ -281,12 +280,19 @@ public class Main {
 		}
 	}
 
-	private static void loadGame() {
+	private static boolean loadGame() {
 		try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(SAVE_FILE))) {
+			Object version = in.readObject();
+			if (!GAME_VERSION.equals(version)) {
+				return false;
+			}
 			characters = (ArrayList<Character>) in.readObject();
 			hero = (Hero) in.readObject();
+			phase = in.readInt();
+			deadFriends = in.readInt();
+			return true;
 		} catch (IOException | ClassNotFoundException e) {
-			System.out.println(LOAD_ERROR);
+			return false;
 		}
 	}
 
