@@ -110,6 +110,14 @@ public class Main {
 		return index;
 	}
 
+	private static void attackCharacter(int index) {
+		Character character = characters.get(index);
+		if (character.isEnemy()) {
+			hero.attack((Enemy) character);
+		}
+		characters.remove(index);
+	}
+
 	private static void killEnemies() {
 		for (int i = 0; i < characters.size(); i++) {
 			Character character = characters.get(i);
