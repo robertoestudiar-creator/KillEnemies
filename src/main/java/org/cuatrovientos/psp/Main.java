@@ -118,6 +118,15 @@ public class Main {
 		characters.remove(index);
 	}
 
+	private static void defendCharacter(int index) {
+		Character character = characters.get(index);
+		if (character.isEnemy()) {
+			characters.add(new Enemy());
+		} else {
+			hero.defend((Friend) character);
+		}
+	}
+
 	private static void killEnemies() {
 		for (int i = 0; i < characters.size(); i++) {
 			Character character = characters.get(i);
