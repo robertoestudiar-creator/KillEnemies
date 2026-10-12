@@ -9,6 +9,8 @@ public class Hero implements Character {
 	private static final int SPECIAL_CHANCE = 10;
 	private static final String SPECIAL_NAME = "Roberto";
 	private static final String EASTER_EGG_MESSAGE = "Bonito nombre, buen señor.";
+	private static final String REVIVE_MESSAGE = "¡He revivido a un aliado!";
+	private static final String COUNTER_MESSAGE = "¡Contraataque!";
 
 	private static Random random = new Random();
 
@@ -60,6 +62,15 @@ public class Hero implements Character {
 			boss.kill();
 			killedEnemies++;
 		}
+	}
+
+	public void revive() {
+		System.out.println(REVIVE_MESSAGE);
+	}
+
+	public void counterattack(Enemy enemy) {
+		System.out.println(COUNTER_MESSAGE);
+		attack(enemy);
 	}
 
 	public int getKilledEnemies() {
