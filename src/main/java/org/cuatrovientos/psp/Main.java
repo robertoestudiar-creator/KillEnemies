@@ -151,6 +151,15 @@ public class Main {
 		return Integer.parseInt(scanner.nextLine());
 	}
 
+	private static int firstEnemyIndex() {
+		for (int i = 0; i < characters.size(); i++) {
+			if (characters.get(i).isEnemy()) {
+				return i;
+			}
+		}
+		return -1;
+	}
+
 	private static int askIndex() {
 		int index = -1;
 		while (index < 0 || index >= characters.size()) {
