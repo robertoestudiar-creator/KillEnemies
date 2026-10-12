@@ -26,9 +26,12 @@ public class Main {
 	private static final String OPTION_EXIT = "0 - Salir";
 	private static final String OPTION_PROMPT = "Elige una opción: ";
 	private static final String INDEX_PROMPT = "Elige el índice del personaje: ";
+	private static final String GAME_VERSION = "5.0";
 	private static final String SAVE_FILE = "partida.dat";
 	private static final String SAVE_ERROR = "No se ha podido guardar la partida";
-	private static final String LOAD_ERROR = "No se ha podido cargar la partida";
+	private static final String VERSION_ERROR = "La versión del juego no coincide con la partida guardada";
+	private static final String DELETE_PROMPT = "¿Quieres borrarla y empezar una nueva? (s/n): ";
+	private static final String YES = "s";
 	private static final String TITLE_GAME = "===== KILL ENEMIES =====";
 	private static final String TITLE_COUNT = "----- RECUENTO -----";
 	private static final String TITLE_CHARACTERS = "----- PERSONAJES -----";
@@ -53,9 +56,14 @@ public class Main {
 
 	public static void main(String[] args) {
 		System.out.println(TITLE_GAME);
+		boolean loaded = false;
 		if (new File(SAVE_FILE).exists()) {
-			loadGame();
-		} else {
+			loaded = loadGame();
+			if (!loaded && !deleteSave()) {
+				return;
+			}
+		}
+		if (!loaded) {
 			createHero();
 			createPhase();
 		}
@@ -270,20 +278,41 @@ public class Main {
 
 	private static void saveGame() {
 		try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(SAVE_FILE))) {
+			out.writeObject(GAME_VERSION);
 			out.writeObject(characters);
 			out.writeObject(hero);
+			out.writeInt(phase);
+			out.writeInt(deadFriends);
 		} catch (IOException e) {
 			System.out.println(SAVE_ERROR);
 		}
 	}
 
-	private static void loadGame() {
+	private static boolean loadGame() {
 		try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(SAVE_FILE))) {
+			Object version = in.readObject();
+			if (!GAME_VERSION.equals(version)) {
+				return false;
+			}
 			characters = (ArrayList<Character>) in.readObject();
 			hero = (Hero) in.readObject();
+			phase = in.readInt();
+			deadFriends = in.readInt();
+			return true;
 		} catch (IOException | ClassNotFoundException e) {
-			System.out.println(LOAD_ERROR);
+			return false;
 		}
+	}
+
+	private static boolean deleteSave() {
+		System.out.println(VERSION_ERROR);
+		System.out.print(DELETE_PROMPT);
+		String answer = scanner.nextLine();
+		if (answer.equalsIgnoreCase(YES)) {
+			new File(SAVE_FILE).delete();
+			return true;
+		}
+		return false;
 	}
 
 }
