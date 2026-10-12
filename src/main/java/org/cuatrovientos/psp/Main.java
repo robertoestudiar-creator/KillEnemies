@@ -21,9 +21,14 @@ public class Main {
 	private static final int EXIT = 0;
 	private static final int ATTACK = 1;
 	private static final int DEFEND = 2;
-	private static final String OPTION_ATTACK = "1 - Atacar";
-	private static final String OPTION_DEFEND = "2 - Defender";
-	private static final String OPTION_EXIT = "0 - Salir";
+	private static final int NO_SELECTION = -1;
+	private static final int NOT_FOUND = -1;
+	private static final int FIRST_PHASE = 1;
+	private static final int NORMAL_DAMAGE = 1;
+	private static final int DOUBLE_DAMAGE = 2;
+	private static final String OPTION_ATTACK = ATTACK + " - Atacar";
+	private static final String OPTION_DEFEND = DEFEND + " - Defender";
+	private static final String OPTION_EXIT = EXIT + " - Salir";
 	private static final String OPTION_PROMPT = "Elige una opción: ";
 	private static final String INDEX_PROMPT = "Elige el índice del personaje: ";
 	private static final String INVALID_NUMBER = "Eso no es un número, prueba otra vez: ";
@@ -59,7 +64,7 @@ public class Main {
 	private static ArrayList<Character> characters = new ArrayList<>();
 	private static Scanner scanner = new Scanner(System.in);
 	private static Hero hero;
-	private static int phase = 1;
+	private static int phase = FIRST_PHASE;
 	private static int deadFriends = 0;
 
 	public static void main(String[] args) {
@@ -191,11 +196,11 @@ public class Main {
 				return i;
 			}
 		}
-		return -1;
+		return NOT_FOUND;
 	}
 
 	private static int askIndex() {
-		int index = -1;
+		int index = NO_SELECTION;
 		while (index < 0 || index >= characters.size()) {
 			System.out.print(INDEX_PROMPT);
 			index = readNumber();
@@ -220,7 +225,7 @@ public class Main {
 	private static void hitFirstEnemy() {
 		int index = firstEnemyIndex();
 		if (index >= 0) {
-			attackEnemy(index, 1);
+			attackEnemy(index, NORMAL_DAMAGE);
 		}
 	}
 
@@ -231,9 +236,9 @@ public class Main {
 		}
 		Character character = characters.get(index);
 		if (character instanceof Boss && special) {
-			attackEnemy(index, 2);
+			attackEnemy(index, DOUBLE_DAMAGE);
 		} else if (character.isEnemy()) {
-			attackEnemy(index, 1);
+			attackEnemy(index, NORMAL_DAMAGE);
 			if (special) {
 				hitFirstEnemy();
 			}
@@ -256,7 +261,7 @@ public class Main {
 		} else {
 			int index = firstEnemyIndex();
 			if (index >= 0 && characters.get(index) instanceof Boss) {
-				attackEnemy(index, 1);
+				attackEnemy(index, NORMAL_DAMAGE);
 			} else if (index >= 0) {
 				hero.counterattack((Enemy) characters.get(index));
 				characters.remove(index);
@@ -295,7 +300,7 @@ public class Main {
 	}
 
 	private static void play() {
-		int option = -1;
+		int option = NO_SELECTION;
 		while (option != EXIT && phase <= MAX_PHASE) {
 			showCharacters();
 			option = askOption();
