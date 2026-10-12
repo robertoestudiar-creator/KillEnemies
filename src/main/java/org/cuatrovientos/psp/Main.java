@@ -327,6 +327,7 @@ public class Main {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	private static boolean loadGame() {
 		try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(SAVE_FILE))) {
 			Object version = in.readObject();
