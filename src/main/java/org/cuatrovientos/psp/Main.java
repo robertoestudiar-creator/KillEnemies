@@ -1,6 +1,7 @@
 package org.cuatrovientos.psp;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class Main {
 
@@ -17,6 +18,10 @@ public class Main {
 		for (int i = 0; i < numEnemies; i++) {
 			characters.add(new Enemy());
 		}
+	}
+
+	private static void shuffleCharacters() {
+		Collections.shuffle(characters);
 	}
 
 }
