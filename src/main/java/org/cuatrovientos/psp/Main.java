@@ -161,10 +161,18 @@ public class Main {
 
 	private static void attackCharacter(int index) {
 		Character character = characters.get(index);
-		if (character.isEnemy()) {
-			hero.attack((Enemy) character);
+		if (character instanceof Boss) {
+			Boss boss = (Boss) character;
+			hero.attackBoss(boss, 1);
+			if (boss.isDead()) {
+				characters.remove(index);
+			}
+		} else {
+			if (character.isEnemy()) {
+				hero.attack((Enemy) character);
+			}
+			characters.remove(index);
 		}
-		characters.remove(index);
 	}
 
 	private static void defendCharacter(int index) {
