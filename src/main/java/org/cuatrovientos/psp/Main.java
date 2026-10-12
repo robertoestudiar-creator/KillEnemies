@@ -8,15 +8,19 @@ public class Main {
 
 	private static final int NUM_FRIENDS = 5;
 	private static final int NUM_ENEMIES = 5;
-	private static final String FRIEND_START = "El carácter ";
-	private static final String FRIEND_END = " es un amigo!";
-	private static final String ENEMY_START = "El personaje ";
-	private static final String ENEMY_END = " es un enemigo! ¡Mátalo!";
 	private static final String HERO_NAME_PROMPT = "Introduce el nombre de tu héroe: ";
 	private static final String COUNT_FRIENDS = "Amigos: ";
 	private static final String COUNT_ENEMIES = "Enemigos: ";
 	private static final String SHOW_FRIEND = " - Amigo";
 	private static final String SHOW_ENEMY = " - Enemigo";
+	private static final int EXIT = 0;
+	private static final int ATTACK = 1;
+	private static final int DEFEND = 2;
+	private static final String OPTION_ATTACK = "1 - Atacar";
+	private static final String OPTION_DEFEND = "2 - Defender";
+	private static final String OPTION_EXIT = "0 - Salir";
+	private static final String OPTION_PROMPT = "Elige una opción: ";
+	private static final String INDEX_PROMPT = "Elige el índice del personaje: ";
 
 	private static ArrayList<Character> characters = new ArrayList<>();
 	private static Scanner scanner = new Scanner(System.in);
@@ -27,8 +31,7 @@ public class Main {
 		createCharacters(NUM_FRIENDS, NUM_ENEMIES);
 		shuffleCharacters();
 		countCharacters();
-		showCharacters();
-		killEnemies();
+		play();
 	}
 
 	private static void createHero() {
@@ -74,24 +77,62 @@ public class Main {
 		}
 	}
 
-	private static void killEnemies() {
-		for (int i = 0; i < characters.size(); i++) {
-			Character character = characters.get(i);
-			System.out.println(buildMessage(character, i));
+	private static boolean hasEnemies() {
+		for (Character character : characters) {
 			if (character.isEnemy()) {
-				((Enemy) character).kill();
+				return true;
 			}
+		}
+		return false;
+	}
+
+	private static int askOption() {
+		if (hasEnemies()) {
+			System.out.println(OPTION_ATTACK);
+		}
+		System.out.println(OPTION_DEFEND);
+		System.out.println(OPTION_EXIT);
+		System.out.print(OPTION_PROMPT);
+		return Integer.parseInt(scanner.nextLine());
+	}
+
+	private static int askIndex() {
+		int index = -1;
+		while (index < 0 || index >= characters.size()) {
+			System.out.print(INDEX_PROMPT);
+			index = Integer.parseInt(scanner.nextLine());
+		}
+		return index;
+	}
+
+	private static void attackCharacter(int index) {
+		Character character = characters.get(index);
+		if (character.isEnemy()) {
+			hero.attack((Enemy) character);
+		}
+		characters.remove(index);
+	}
+
+	private static void defendCharacter(int index) {
+		Character character = characters.get(index);
+		if (character.isEnemy()) {
+			characters.add(new Enemy());
+		} else {
+			hero.defend((Friend) character);
 		}
 	}
 
-	private static String buildMessage(Character character, int index) {
-		String message;
-		if (character.isEnemy()) {
-			message = ENEMY_START + index + ENEMY_END;
-		} else {
-			message = FRIEND_START + index + FRIEND_END;
+	private static void play() {
+		int option = -1;
+		while (option != EXIT) {
+			showCharacters();
+			option = askOption();
+			if (option == ATTACK && hasEnemies()) {
+				attackCharacter(askIndex());
+			} else if (option == DEFEND && !characters.isEmpty()) {
+				defendCharacter(askIndex());
+			}
 		}
-		return message;
 	}
 
 }
