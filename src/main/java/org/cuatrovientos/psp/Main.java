@@ -29,6 +29,16 @@ public class Main {
 		Collections.shuffle(characters);
 	}
 
+	private static void killEnemies() {
+		for (int i = 0; i < characters.size(); i++) {
+			Character character = characters.get(i);
+			System.out.println(buildMessage(character, i));
+			if (character.isEnemy()) {
+				((Enemy) character).kill();
+			}
+		}
+	}
+
 	private static String buildMessage(Character character, int index) {
 		String message;
 		if (character.isEnemy()) {
