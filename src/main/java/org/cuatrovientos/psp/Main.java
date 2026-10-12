@@ -1,5 +1,6 @@
 package org.cuatrovientos.psp;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -35,9 +36,13 @@ public class Main {
 	private static Hero hero;
 
 	public static void main(String[] args) {
-		createHero();
-		createCharacters(NUM_FRIENDS, NUM_ENEMIES);
-		shuffleCharacters();
+		if (new File(SAVE_FILE).exists()) {
+			loadGame();
+		} else {
+			createHero();
+			createCharacters(NUM_FRIENDS, NUM_ENEMIES);
+			shuffleCharacters();
+		}
 		countCharacters();
 		play();
 		saveGame();
