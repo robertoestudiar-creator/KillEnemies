@@ -127,6 +127,19 @@ public class Main {
 		}
 	}
 
+	private static void play() {
+		int option = -1;
+		while (option != EXIT) {
+			showCharacters();
+			option = askOption();
+			if (option == ATTACK && hasEnemies()) {
+				attackCharacter(askIndex());
+			} else if (option == DEFEND && !characters.isEmpty()) {
+				defendCharacter(askIndex());
+			}
+		}
+	}
+
 	private static void killEnemies() {
 		for (int i = 0; i < characters.size(); i++) {
 			Character character = characters.get(i);
