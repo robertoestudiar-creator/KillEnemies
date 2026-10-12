@@ -42,6 +42,7 @@ public class Main {
 	private static final String SHOW_BOSS_START = " - Jefe (vidas: ";
 	private static final String SHOW_BOSS_END = ")";
 	private static final String PHASE_CLEARED = "¡Fase superada!";
+	private static final String DOUBLE_HIT_MESSAGE = "¡GOLPE DOBLE!";
 
 	private static ArrayList<Character> characters = new ArrayList<>();
 	private static Scanner scanner = new Scanner(System.in);
@@ -183,13 +184,32 @@ public class Main {
 		}
 	}
 
-	private static void attackCharacter(int index) {
-		Character character = characters.get(index);
-		if (character.isEnemy()) {
+	private static void hitFirstEnemy() {
+		int index = firstEnemyIndex();
+		if (index >= 0) {
 			attackEnemy(index, 1);
+		}
+	}
+
+	private static void attackCharacter(int index) {
+		boolean special = hero.isSpecial();
+		if (special) {
+			System.out.println(DOUBLE_HIT_MESSAGE);
+		}
+		Character character = characters.get(index);
+		if (character instanceof Boss && special) {
+			attackEnemy(index, 2);
+		} else if (character.isEnemy()) {
+			attackEnemy(index, 1);
+			if (special) {
+				hitFirstEnemy();
+			}
 		} else {
 			characters.remove(index);
 			deadFriends++;
+			if (special) {
+				hitFirstEnemy();
+			}
 		}
 	}
 
