@@ -30,12 +30,17 @@ public class Main {
 	private static final String SAVE_FILE = "partida.dat";
 	private static final String SAVE_ERROR = "No se ha podido guardar la partida";
 	private static final String LOAD_ERROR = "No se ha podido cargar la partida";
+	private static final String TITLE_GAME = "===== KILL ENEMIES =====";
+	private static final String TITLE_COUNT = "----- RECUENTO -----";
+	private static final String TITLE_CHARACTERS = "----- PERSONAJES -----";
+	private static final String TITLE_OPTIONS = "----- ¿QUÉ QUIERES HACER? -----";
 
 	private static ArrayList<Character> characters = new ArrayList<>();
 	private static Scanner scanner = new Scanner(System.in);
 	private static Hero hero;
 
 	public static void main(String[] args) {
+		System.out.println(TITLE_GAME);
 		if (new File(SAVE_FILE).exists()) {
 			loadGame();
 		} else {
@@ -68,6 +73,8 @@ public class Main {
 	}
 
 	private static void countCharacters() {
+		System.out.println();
+		System.out.println(TITLE_COUNT);
 		int friends = 0;
 		int enemies = 0;
 		for (Character character : characters) {
@@ -82,6 +89,8 @@ public class Main {
 	}
 
 	private static void showCharacters() {
+		System.out.println();
+		System.out.println(TITLE_CHARACTERS);
 		for (int i = 0; i < characters.size(); i++) {
 			if (characters.get(i).isEnemy()) {
 				System.out.println(i + SHOW_ENEMY);
@@ -101,6 +110,8 @@ public class Main {
 	}
 
 	private static int askOption() {
+		System.out.println();
+		System.out.println(TITLE_OPTIONS);
 		if (hasEnemies()) {
 			System.out.println(OPTION_ATTACK);
 		}
