@@ -37,6 +37,9 @@ public class Main {
 	private static final int MAX_PHASE = 8;
 	private static final int EXTRA_ENEMIES = 2;
 	private static final int BOSS_LIVES = 6;
+	private static final String TITLE_PHASE_START = "===== FASE ";
+	private static final String TITLE_PHASE_SEPARATOR = " / ";
+	private static final String TITLE_PHASE_END = " =====";
 
 	private static ArrayList<Character> characters = new ArrayList<>();
 	private static Scanner scanner = new Scanner(System.in);
@@ -85,6 +88,12 @@ public class Main {
 			createCharacters(NUM_FRIENDS, phase + EXTRA_ENEMIES);
 		}
 		shuffleCharacters();
+	}
+
+	private static void showPhase() {
+		System.out.println();
+		System.out.println(TITLE_PHASE_START + phase + TITLE_PHASE_SEPARATOR + MAX_PHASE + TITLE_PHASE_END);
+		countCharacters();
 	}
 
 	private static void countCharacters() {
