@@ -13,7 +13,6 @@ import java.util.Scanner;
 public class Main {
 
 	private static final int NUM_FRIENDS = 5;
-	private static final int NUM_ENEMIES = 5;
 	private static final String HERO_NAME_PROMPT = "Introduce el nombre de tu héroe: ";
 	private static final String COUNT_FRIENDS = "Amigos: ";
 	private static final String COUNT_ENEMIES = "Enemigos: ";
@@ -55,10 +54,9 @@ public class Main {
 			loadGame();
 		} else {
 			createHero();
-			createCharacters(NUM_FRIENDS, NUM_ENEMIES);
-			shuffleCharacters();
+			createPhase();
 		}
-		countCharacters();
+		showPhase();
 		play();
 		saveGame();
 	}
