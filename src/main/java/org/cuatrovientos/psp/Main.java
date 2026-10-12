@@ -48,6 +48,8 @@ public class Main {
 	private static final String PHASE_CLEARED = "¡Fase superada!";
 	private static final String DOUBLE_HIT_MESSAGE = "¡GOLPE DOBLE!";
 	private static final String SPECIAL_DEFEND_MESSAGE = "¡HABILIDAD ESPECIAL!";
+	private static final String FRIEND_KILLED_MESSAGE = "¡Oh no! Has matado a un amigo";
+	private static final String ENEMY_DUPLICATED_MESSAGE = "¡El enemigo se ha duplicado!";
 	private static final String WIN_MESSAGE = "¡Has ganado el juego!";
 	private static final String TITLE_STATS = "----- ESTADÍSTICAS -----";
 	private static final String STATS_HERO = "Héroe: ";
@@ -236,6 +238,7 @@ public class Main {
 				hitFirstEnemy();
 			}
 		} else {
+			System.out.println(FRIEND_KILLED_MESSAGE);
 			characters.remove(index);
 			deadFriends++;
 			if (special) {
@@ -264,6 +267,7 @@ public class Main {
 	private static void defendCharacter(int index) {
 		Character character = characters.get(index);
 		if (character.isEnemy()) {
+			System.out.println(ENEMY_DUPLICATED_MESSAGE);
 			characters.add(new Enemy());
 		} else {
 			hero.defend((Friend) character);
