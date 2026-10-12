@@ -42,11 +42,14 @@ public class Main {
 	private static final String SHOW_BOSS_START = " - Jefe (vidas: ";
 	private static final String SHOW_BOSS_END = ")";
 	private static final String PHASE_CLEARED = "¡Fase superada!";
+	private static final String DOUBLE_HIT_MESSAGE = "¡GOLPE DOBLE!";
+	private static final String SPECIAL_DEFEND_MESSAGE = "¡HABILIDAD ESPECIAL!";
 
 	private static ArrayList<Character> characters = new ArrayList<>();
 	private static Scanner scanner = new Scanner(System.in);
 	private static Hero hero;
 	private static int phase = 1;
+	private static int deadFriends = 0;
 
 	public static void main(String[] args) {
 		System.out.println(TITLE_GAME);
@@ -82,6 +85,7 @@ public class Main {
 
 	private static void createPhase() {
 		characters.clear();
+		deadFriends = 0;
 		if (phase == MAX_PHASE) {
 			createCharacters(NUM_FRIENDS, 0);
 			characters.add(new Boss(BOSS_LIVES));
@@ -149,6 +153,15 @@ public class Main {
 		return Integer.parseInt(scanner.nextLine());
 	}
 
+	private static int firstEnemyIndex() {
+		for (int i = 0; i < characters.size(); i++) {
+			if (characters.get(i).isEnemy()) {
+				return i;
+			}
+		}
+		return -1;
+	}
+
 	private static int askIndex() {
 		int index = -1;
 		while (index < 0 || index >= characters.size()) {
@@ -158,19 +171,63 @@ public class Main {
 		return index;
 	}
 
-	private static void attackCharacter(int index) {
+	private static void attackEnemy(int index, int damage) {
 		Character character = characters.get(index);
 		if (character instanceof Boss) {
 			Boss boss = (Boss) character;
-			hero.attackBoss(boss, 1);
+			hero.attackBoss(boss, damage);
 			if (boss.isDead()) {
 				characters.remove(index);
 			}
 		} else {
-			if (character.isEnemy()) {
-				hero.attack((Enemy) character);
-			}
+			hero.attack((Enemy) character);
 			characters.remove(index);
+		}
+	}
+
+	private static void hitFirstEnemy() {
+		int index = firstEnemyIndex();
+		if (index >= 0) {
+			attackEnemy(index, 1);
+		}
+	}
+
+	private static void attackCharacter(int index) {
+		boolean special = hero.isSpecial();
+		if (special) {
+			System.out.println(DOUBLE_HIT_MESSAGE);
+		}
+		Character character = characters.get(index);
+		if (character instanceof Boss && special) {
+			attackEnemy(index, 2);
+		} else if (character.isEnemy()) {
+			attackEnemy(index, 1);
+			if (special) {
+				hitFirstEnemy();
+			}
+		} else {
+			characters.remove(index);
+			deadFriends++;
+			if (special) {
+				hitFirstEnemy();
+			}
+		}
+	}
+
+	private static void reviveOrCounterattack() {
+		System.out.println(SPECIAL_DEFEND_MESSAGE);
+		if (deadFriends > 0) {
+			hero.revive();
+			characters.add(new Friend());
+			deadFriends--;
+		} else {
+			int index = firstEnemyIndex();
+			if (index >= 0 && characters.get(index) instanceof Boss) {
+				attackEnemy(index, 1);
+			} else if (index >= 0) {
+				hero.counterattack((Enemy) characters.get(index));
+				characters.remove(index);
+			}
 		}
 	}
 
@@ -180,6 +237,9 @@ public class Main {
 			characters.add(new Enemy());
 		} else {
 			hero.defend((Friend) character);
+		}
+		if (hero.isSpecial()) {
+			reviveOrCounterattack();
 		}
 	}
 
