@@ -35,6 +35,8 @@ public class Main {
 	private static final String TITLE_CHARACTERS = "----- PERSONAJES -----";
 	private static final String TITLE_OPTIONS = "----- ¿QUÉ QUIERES HACER? -----";
 	private static final int MAX_PHASE = 8;
+	private static final int EXTRA_ENEMIES = 2;
+	private static final int BOSS_LIVES = 6;
 
 	private static ArrayList<Character> characters = new ArrayList<>();
 	private static Scanner scanner = new Scanner(System.in);
@@ -72,6 +74,17 @@ public class Main {
 
 	private static void shuffleCharacters() {
 		Collections.shuffle(characters);
+	}
+
+	private static void createPhase() {
+		characters.clear();
+		if (phase == MAX_PHASE) {
+			createCharacters(NUM_FRIENDS, 0);
+			characters.add(new Boss(BOSS_LIVES));
+		} else {
+			createCharacters(NUM_FRIENDS, phase + EXTRA_ENEMIES);
+		}
+		shuffleCharacters();
 	}
 
 	private static void countCharacters() {
