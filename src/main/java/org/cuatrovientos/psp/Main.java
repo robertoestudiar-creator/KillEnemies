@@ -42,6 +42,7 @@ public class Main {
 	private static final String TITLE_PHASE_END = " =====";
 	private static final String SHOW_BOSS_START = " - Jefe (vidas: ";
 	private static final String SHOW_BOSS_END = ")";
+	private static final String PHASE_CLEARED = "¡Fase superada!";
 
 	private static ArrayList<Character> characters = new ArrayList<>();
 	private static Scanner scanner = new Scanner(System.in);
@@ -181,6 +182,15 @@ public class Main {
 			characters.add(new Enemy());
 		} else {
 			hero.defend((Friend) character);
+		}
+	}
+
+	private static void nextPhase() {
+		System.out.println(PHASE_CLEARED);
+		phase++;
+		if (phase <= MAX_PHASE) {
+			createPhase();
+			showPhase();
 		}
 	}
 
