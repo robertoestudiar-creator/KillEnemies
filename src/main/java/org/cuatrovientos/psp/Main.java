@@ -13,6 +13,8 @@ public class Main {
 	private static final String ENEMY_START = "El personaje ";
 	private static final String ENEMY_END = " es un enemigo! ¡Mátalo!";
 	private static final String HERO_NAME_PROMPT = "Introduce el nombre de tu héroe: ";
+	private static final String COUNT_FRIENDS = "Amigos: ";
+	private static final String COUNT_ENEMIES = "Enemigos: ";
 
 	private static ArrayList<Character> characters = new ArrayList<>();
 	private static Scanner scanner = new Scanner(System.in);
@@ -42,6 +44,20 @@ public class Main {
 
 	private static void shuffleCharacters() {
 		Collections.shuffle(characters);
+	}
+
+	private static void countCharacters() {
+		int friends = 0;
+		int enemies = 0;
+		for (Character character : characters) {
+			if (character.isEnemy()) {
+				enemies++;
+			} else {
+				friends++;
+			}
+		}
+		System.out.println(COUNT_FRIENDS + friends);
+		System.out.println(COUNT_ENEMIES + enemies);
 	}
 
 	private static void killEnemies() {
