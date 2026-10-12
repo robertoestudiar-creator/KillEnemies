@@ -31,6 +31,7 @@ public class Main {
 	private static final String SAVE_ERROR = "No se ha podido guardar la partida";
 	private static final String LOAD_ERROR = "No se ha podido cargar la partida";
 	private static final String TITLE_GAME = "===== KILL ENEMIES =====";
+	private static final String TITLE_COUNT = "----- RECUENTO -----";
 
 	private static ArrayList<Character> characters = new ArrayList<>();
 	private static Scanner scanner = new Scanner(System.in);
@@ -70,6 +71,8 @@ public class Main {
 	}
 
 	private static void countCharacters() {
+		System.out.println();
+		System.out.println(TITLE_COUNT);
 		int friends = 0;
 		int enemies = 0;
 		for (Character character : characters) {
