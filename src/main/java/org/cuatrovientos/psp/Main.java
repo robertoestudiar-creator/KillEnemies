@@ -43,6 +43,7 @@ public class Main {
 	private static final String SHOW_BOSS_END = ")";
 	private static final String PHASE_CLEARED = "¡Fase superada!";
 	private static final String DOUBLE_HIT_MESSAGE = "¡GOLPE DOBLE!";
+	private static final String SPECIAL_DEFEND_MESSAGE = "¡HABILIDAD ESPECIAL!";
 
 	private static ArrayList<Character> characters = new ArrayList<>();
 	private static Scanner scanner = new Scanner(System.in);
@@ -213,12 +214,32 @@ public class Main {
 		}
 	}
 
+	private static void reviveOrCounterattack() {
+		System.out.println(SPECIAL_DEFEND_MESSAGE);
+		if (deadFriends > 0) {
+			hero.revive();
+			characters.add(new Friend());
+			deadFriends--;
+		} else {
+			int index = firstEnemyIndex();
+			if (index >= 0 && characters.get(index) instanceof Boss) {
+				attackEnemy(index, 1);
+			} else if (index >= 0) {
+				hero.counterattack((Enemy) characters.get(index));
+				characters.remove(index);
+			}
+		}
+	}
+
 	private static void defendCharacter(int index) {
 		Character character = characters.get(index);
 		if (character.isEnemy()) {
 			characters.add(new Enemy());
 		} else {
 			hero.defend((Friend) character);
+		}
+		if (hero.isSpecial()) {
+			reviveOrCounterattack();
 		}
 	}
 
