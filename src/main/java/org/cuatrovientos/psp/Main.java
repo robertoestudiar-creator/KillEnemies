@@ -29,6 +29,9 @@ public class Main {
 	private static final String GAME_VERSION = "5.0";
 	private static final String SAVE_FILE = "partida.dat";
 	private static final String SAVE_ERROR = "No se ha podido guardar la partida";
+	private static final String VERSION_ERROR = "La versión del juego no coincide con la partida guardada";
+	private static final String DELETE_PROMPT = "¿Quieres borrarla y empezar una nueva? (s/n): ";
+	private static final String YES = "s";
 	private static final String TITLE_GAME = "===== KILL ENEMIES =====";
 	private static final String TITLE_COUNT = "----- RECUENTO -----";
 	private static final String TITLE_CHARACTERS = "----- PERSONAJES -----";
@@ -294,6 +297,17 @@ public class Main {
 		} catch (IOException | ClassNotFoundException e) {
 			return false;
 		}
+	}
+
+	private static boolean deleteSave() {
+		System.out.println(VERSION_ERROR);
+		System.out.print(DELETE_PROMPT);
+		String answer = scanner.nextLine();
+		if (answer.equalsIgnoreCase(YES)) {
+			new File(SAVE_FILE).delete();
+			return true;
+		}
+		return false;
 	}
 
 }
