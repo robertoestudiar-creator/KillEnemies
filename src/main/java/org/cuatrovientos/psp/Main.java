@@ -2,6 +2,7 @@ package org.cuatrovientos.psp;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Scanner;
 
 public class Main {
 
@@ -11,13 +12,29 @@ public class Main {
 	private static final String FRIEND_END = " es un amigo!";
 	private static final String ENEMY_START = "El personaje ";
 	private static final String ENEMY_END = " es un enemigo! ¡Mátalo!";
+	private static final String HERO_NAME_PROMPT = "Introduce el nombre de tu héroe: ";
+	private static final String COUNT_FRIENDS = "Amigos: ";
+	private static final String COUNT_ENEMIES = "Enemigos: ";
+	private static final String SHOW_FRIEND = " - Amigo";
+	private static final String SHOW_ENEMY = " - Enemigo";
 
 	private static ArrayList<Character> characters = new ArrayList<>();
+	private static Scanner scanner = new Scanner(System.in);
+	private static Hero hero;
 
 	public static void main(String[] args) {
+		createHero();
 		createCharacters(NUM_FRIENDS, NUM_ENEMIES);
 		shuffleCharacters();
+		countCharacters();
+		showCharacters();
 		killEnemies();
+	}
+
+	private static void createHero() {
+		System.out.print(HERO_NAME_PROMPT);
+		String name = scanner.nextLine();
+		hero = new Hero(name);
 	}
 
 	private static void createCharacters(int numFriends, int numEnemies) {
@@ -31,6 +48,30 @@ public class Main {
 
 	private static void shuffleCharacters() {
 		Collections.shuffle(characters);
+	}
+
+	private static void countCharacters() {
+		int friends = 0;
+		int enemies = 0;
+		for (Character character : characters) {
+			if (character.isEnemy()) {
+				enemies++;
+			} else {
+				friends++;
+			}
+		}
+		System.out.println(COUNT_FRIENDS + friends);
+		System.out.println(COUNT_ENEMIES + enemies);
+	}
+
+	private static void showCharacters() {
+		for (int i = 0; i < characters.size(); i++) {
+			if (characters.get(i).isEnemy()) {
+				System.out.println(i + SHOW_ENEMY);
+			} else {
+				System.out.println(i + SHOW_FRIEND);
+			}
+		}
 	}
 
 	private static void killEnemies() {
