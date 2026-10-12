@@ -5,6 +5,8 @@ import java.util.Collections;
 
 public class Main {
 
+	private static final int NUM_FRIENDS = 5;
+	private static final int NUM_ENEMIES = 5;
 	private static final String FRIEND_START = "El carácter ";
 	private static final String FRIEND_END = " es un amigo!";
 	private static final String ENEMY_START = "El personaje ";
@@ -13,7 +15,9 @@ public class Main {
 	private static ArrayList<Character> characters = new ArrayList<>();
 
 	public static void main(String[] args) {
-
+		createCharacters(NUM_FRIENDS, NUM_ENEMIES);
+		shuffleCharacters();
+		killEnemies();
 	}
 
 	private static void createCharacters(int numFriends, int numEnemies) {
