@@ -17,6 +17,13 @@ public class Main {
 	private static final String COUNT_ENEMIES = "Enemigos: ";
 	private static final String SHOW_FRIEND = " - Amigo";
 	private static final String SHOW_ENEMY = " - Enemigo";
+	private static final int EXIT = 0;
+	private static final int ATTACK = 1;
+	private static final int DEFEND = 2;
+	private static final String OPTION_ATTACK = "1 - Atacar";
+	private static final String OPTION_DEFEND = "2 - Defender";
+	private static final String OPTION_EXIT = "0 - Salir";
+	private static final String OPTION_PROMPT = "Elige una opción: ";
 
 	private static ArrayList<Character> characters = new ArrayList<>();
 	private static Scanner scanner = new Scanner(System.in);
@@ -81,6 +88,16 @@ public class Main {
 			}
 		}
 		return false;
+	}
+
+	private static int askOption() {
+		if (hasEnemies()) {
+			System.out.println(OPTION_ATTACK);
+		}
+		System.out.println(OPTION_DEFEND);
+		System.out.println(OPTION_EXIT);
+		System.out.print(OPTION_PROMPT);
+		return Integer.parseInt(scanner.nextLine());
 	}
 
 	private static void killEnemies() {
