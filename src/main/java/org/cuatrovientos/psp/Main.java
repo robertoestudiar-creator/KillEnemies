@@ -32,7 +32,7 @@ public class Main {
 	private static final String OPTION_PROMPT = "Elige una opción: ";
 	private static final String INDEX_PROMPT = "Elige el índice del personaje: ";
 	private static final String INVALID_NUMBER = "Eso no es un número, prueba otra vez: ";
-	private static final String GAME_VERSION = "5.0";
+	private static final String GAME_VERSION = "5.1";
 	private static final String SAVE_FILE = "partida.dat";
 	private static final String SAVE_ERROR = "No se ha podido guardar la partida";
 	private static final String VERSION_ERROR = "La versión del juego no coincide con la partida guardada";
