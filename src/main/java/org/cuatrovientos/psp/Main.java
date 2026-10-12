@@ -47,6 +47,7 @@ public class Main {
 	private static final String PHASE_CLEARED = "¡Fase superada!";
 	private static final String DOUBLE_HIT_MESSAGE = "¡GOLPE DOBLE!";
 	private static final String SPECIAL_DEFEND_MESSAGE = "¡HABILIDAD ESPECIAL!";
+	private static final String WIN_MESSAGE = "¡Has ganado el juego!";
 	private static final String TITLE_STATS = "----- ESTADÍSTICAS -----";
 	private static final String STATS_HERO = "Héroe: ";
 	private static final String STATS_KILLED = "Enemigos matados: ";
@@ -73,7 +74,12 @@ public class Main {
 		}
 		showPhase();
 		play();
-		saveGame();
+		if (phase > MAX_PHASE) {
+			System.out.println(WIN_MESSAGE);
+			new File(SAVE_FILE).delete();
+		} else {
+			saveGame();
+		}
 	}
 
 	private static void createHero() {
