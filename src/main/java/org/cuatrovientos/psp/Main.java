@@ -56,9 +56,14 @@ public class Main {
 
 	public static void main(String[] args) {
 		System.out.println(TITLE_GAME);
+		boolean loaded = false;
 		if (new File(SAVE_FILE).exists()) {
-			loadGame();
-		} else {
+			loaded = loadGame();
+			if (!loaded && !deleteSave()) {
+				return;
+			}
+		}
+		if (!loaded) {
 			createHero();
 			createPhase();
 		}
