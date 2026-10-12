@@ -4,6 +4,7 @@ public class Boss extends Enemy {
 
 	private static final String LIVES_START = "¡Jajaja! Aún me quedan ";
 	private static final String LIVES_END = " vidas";
+	private static final String LAST_LIFE_MESSAGE = "¡Jajaja! Aún me queda 1 vida";
 	private static final String DEFEATED_MESSAGE = "¡NOOOO! Has derrotado al jefe...";
 
 	private int lives;
@@ -18,7 +19,9 @@ public class Boss extends Enemy {
 
 	public void hit(int damage) {
 		lives = lives - damage;
-		if (lives > 0) {
+		if (lives == 1) {
+			System.out.println(LAST_LIFE_MESSAGE);
+		} else if (lives > 1) {
 			System.out.println(LIVES_START + lives + LIVES_END);
 		}
 	}
