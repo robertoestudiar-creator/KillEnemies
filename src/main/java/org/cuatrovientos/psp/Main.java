@@ -13,7 +13,6 @@ import java.util.Scanner;
 public class Main {
 
 	private static final int NUM_FRIENDS = 5;
-	private static final int NUM_ENEMIES = 5;
 	private static final String HERO_NAME_PROMPT = "Introduce el nombre de tu héroe: ";
 	private static final String COUNT_FRIENDS = "Amigos: ";
 	private static final String COUNT_ENEMIES = "Enemigos: ";
@@ -34,10 +33,20 @@ public class Main {
 	private static final String TITLE_COUNT = "----- RECUENTO -----";
 	private static final String TITLE_CHARACTERS = "----- PERSONAJES -----";
 	private static final String TITLE_OPTIONS = "----- ¿QUÉ QUIERES HACER? -----";
+	private static final int MAX_PHASE = 8;
+	private static final int EXTRA_ENEMIES = 2;
+	private static final int BOSS_LIVES = 6;
+	private static final String TITLE_PHASE_START = "===== FASE ";
+	private static final String TITLE_PHASE_SEPARATOR = " / ";
+	private static final String TITLE_PHASE_END = " =====";
+	private static final String SHOW_BOSS_START = " - Jefe (vidas: ";
+	private static final String SHOW_BOSS_END = ")";
+	private static final String PHASE_CLEARED = "¡Fase superada!";
 
 	private static ArrayList<Character> characters = new ArrayList<>();
 	private static Scanner scanner = new Scanner(System.in);
 	private static Hero hero;
+	private static int phase = 1;
 
 	public static void main(String[] args) {
 		System.out.println(TITLE_GAME);
@@ -45,10 +54,9 @@ public class Main {
 			loadGame();
 		} else {
 			createHero();
-			createCharacters(NUM_FRIENDS, NUM_ENEMIES);
-			shuffleCharacters();
+			createPhase();
 		}
-		countCharacters();
+		showPhase();
 		play();
 		saveGame();
 	}
@@ -72,6 +80,23 @@ public class Main {
 		Collections.shuffle(characters);
 	}
 
+	private static void createPhase() {
+		characters.clear();
+		if (phase == MAX_PHASE) {
+			createCharacters(NUM_FRIENDS, 0);
+			characters.add(new Boss(BOSS_LIVES));
+		} else {
+			createCharacters(NUM_FRIENDS, phase + EXTRA_ENEMIES);
+		}
+		shuffleCharacters();
+	}
+
+	private static void showPhase() {
+		System.out.println();
+		System.out.println(TITLE_PHASE_START + phase + TITLE_PHASE_SEPARATOR + MAX_PHASE + TITLE_PHASE_END);
+		countCharacters();
+	}
+
 	private static void countCharacters() {
 		System.out.println();
 		System.out.println(TITLE_COUNT);
@@ -92,7 +117,10 @@ public class Main {
 		System.out.println();
 		System.out.println(TITLE_CHARACTERS);
 		for (int i = 0; i < characters.size(); i++) {
-			if (characters.get(i).isEnemy()) {
+			Character character = characters.get(i);
+			if (character instanceof Boss) {
+				System.out.println(i + SHOW_BOSS_START + ((Boss) character).getLives() + SHOW_BOSS_END);
+			} else if (character.isEnemy()) {
 				System.out.println(i + SHOW_ENEMY);
 			} else {
 				System.out.println(i + SHOW_FRIEND);
@@ -132,10 +160,18 @@ public class Main {
 
 	private static void attackCharacter(int index) {
 		Character character = characters.get(index);
-		if (character.isEnemy()) {
-			hero.attack((Enemy) character);
+		if (character instanceof Boss) {
+			Boss boss = (Boss) character;
+			hero.attackBoss(boss, 1);
+			if (boss.isDead()) {
+				characters.remove(index);
+			}
+		} else {
+			if (character.isEnemy()) {
+				hero.attack((Enemy) character);
+			}
+			characters.remove(index);
 		}
-		characters.remove(index);
 	}
 
 	private static void defendCharacter(int index) {
@@ -147,15 +183,27 @@ public class Main {
 		}
 	}
 
+	private static void nextPhase() {
+		System.out.println(PHASE_CLEARED);
+		phase++;
+		if (phase <= MAX_PHASE) {
+			createPhase();
+			showPhase();
+		}
+	}
+
 	private static void play() {
 		int option = -1;
-		while (option != EXIT) {
+		while (option != EXIT && phase <= MAX_PHASE) {
 			showCharacters();
 			option = askOption();
 			if (option == ATTACK && hasEnemies()) {
 				attackCharacter(askIndex());
 			} else if (option == DEFEND && !characters.isEmpty()) {
 				defendCharacter(askIndex());
+			}
+			if (!hasEnemies()) {
+				nextPhase();
 			}
 		}
 	}
