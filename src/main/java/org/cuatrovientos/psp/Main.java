@@ -74,6 +74,15 @@ public class Main {
 		}
 	}
 
+	private static boolean hasEnemies() {
+		for (Character character : characters) {
+			if (character.isEnemy()) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	private static void killEnemies() {
 		for (int i = 0; i < characters.size(); i++) {
 			Character character = characters.get(i);
