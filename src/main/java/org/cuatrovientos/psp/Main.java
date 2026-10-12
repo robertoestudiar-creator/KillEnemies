@@ -40,6 +40,7 @@ public class Main {
 		shuffleCharacters();
 		countCharacters();
 		play();
+		saveGame();
 	}
 
 	private static void createHero() {
