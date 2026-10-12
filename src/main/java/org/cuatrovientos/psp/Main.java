@@ -32,6 +32,7 @@ public class Main {
 	private static final String LOAD_ERROR = "No se ha podido cargar la partida";
 	private static final String TITLE_GAME = "===== KILL ENEMIES =====";
 	private static final String TITLE_COUNT = "----- RECUENTO -----";
+	private static final String TITLE_CHARACTERS = "----- PERSONAJES -----";
 
 	private static ArrayList<Character> characters = new ArrayList<>();
 	private static Scanner scanner = new Scanner(System.in);
@@ -87,6 +88,8 @@ public class Main {
 	}
 
 	private static void showCharacters() {
+		System.out.println();
+		System.out.println(TITLE_CHARACTERS);
 		for (int i = 0; i < characters.size(); i++) {
 			if (characters.get(i).isEnemy()) {
 				System.out.println(i + SHOW_ENEMY);
