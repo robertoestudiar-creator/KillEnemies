@@ -80,6 +80,7 @@ public class Main {
 		} else {
 			saveGame();
 		}
+		showStats();
 	}
 
 	private static void createHero() {
