@@ -47,6 +47,10 @@ public class Main {
 	private static final String PHASE_CLEARED = "¡Fase superada!";
 	private static final String DOUBLE_HIT_MESSAGE = "¡GOLPE DOBLE!";
 	private static final String SPECIAL_DEFEND_MESSAGE = "¡HABILIDAD ESPECIAL!";
+	private static final String TITLE_STATS = "----- ESTADÍSTICAS -----";
+	private static final String STATS_HERO = "Héroe: ";
+	private static final String STATS_KILLED = "Enemigos matados: ";
+	private static final String STATS_DEFENDED = "Amigos defendidos: ";
 
 	private static ArrayList<Character> characters = new ArrayList<>();
 	private static Scanner scanner = new Scanner(System.in);
@@ -258,6 +262,14 @@ public class Main {
 			createPhase();
 			showPhase();
 		}
+	}
+
+	private static void showStats() {
+		System.out.println();
+		System.out.println(TITLE_STATS);
+		System.out.println(STATS_HERO + hero.getName());
+		System.out.println(STATS_KILLED + hero.getKilledEnemies());
+		System.out.println(STATS_DEFENDED + hero.getDefendedFriends());
 	}
 
 	private static void play() {
