@@ -24,6 +24,7 @@ public class Main {
 	private static final String OPTION_DEFEND = "2 - Defender";
 	private static final String OPTION_EXIT = "0 - Salir";
 	private static final String OPTION_PROMPT = "Elige una opción: ";
+	private static final String INDEX_PROMPT = "Elige el índice del personaje: ";
 
 	private static ArrayList<Character> characters = new ArrayList<>();
 	private static Scanner scanner = new Scanner(System.in);
@@ -98,6 +99,15 @@ public class Main {
 		System.out.println(OPTION_EXIT);
 		System.out.print(OPTION_PROMPT);
 		return Integer.parseInt(scanner.nextLine());
+	}
+
+	private static int askIndex() {
+		int index = -1;
+		while (index < 0 || index >= characters.size()) {
+			System.out.print(INDEX_PROMPT);
+			index = Integer.parseInt(scanner.nextLine());
+		}
+		return index;
 	}
 
 	private static void killEnemies() {
