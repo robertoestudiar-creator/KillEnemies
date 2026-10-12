@@ -2,6 +2,7 @@ package org.cuatrovientos.psp;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Scanner;
 
 public class Main {
 
@@ -11,13 +12,23 @@ public class Main {
 	private static final String FRIEND_END = " es un amigo!";
 	private static final String ENEMY_START = "El personaje ";
 	private static final String ENEMY_END = " es un enemigo! ¡Mátalo!";
+	private static final String HERO_NAME_PROMPT = "Introduce el nombre de tu héroe: ";
 
 	private static ArrayList<Character> characters = new ArrayList<>();
+	private static Scanner scanner = new Scanner(System.in);
+	private static Hero hero;
 
 	public static void main(String[] args) {
+		createHero();
 		createCharacters(NUM_FRIENDS, NUM_ENEMIES);
 		shuffleCharacters();
 		killEnemies();
+	}
+
+	private static void createHero() {
+		System.out.print(HERO_NAME_PROMPT);
+		String name = scanner.nextLine();
+		hero = new Hero(name);
 	}
 
 	private static void createCharacters(int numFriends, int numEnemies) {
