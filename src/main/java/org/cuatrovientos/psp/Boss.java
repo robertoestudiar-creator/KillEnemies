@@ -2,6 +2,9 @@ package org.cuatrovientos.psp;
 
 public class Boss extends Enemy {
 
+	private static final String LIVES_START = "¡Jajaja! Aún me quedan ";
+	private static final String LIVES_END = " vidas";
+
 	private int lives;
 
 	public Boss(int lives) {
@@ -10,6 +13,17 @@ public class Boss extends Enemy {
 
 	public int getLives() {
 		return lives;
+	}
+
+	public void hit(int damage) {
+		lives = lives - damage;
+		if (lives > 0) {
+			System.out.println(LIVES_START + lives + LIVES_END);
+		}
+	}
+
+	public boolean isDead() {
+		return lives <= 0;
 	}
 
 }
