@@ -40,6 +40,8 @@ public class Main {
 	private static final String TITLE_PHASE_START = "===== FASE ";
 	private static final String TITLE_PHASE_SEPARATOR = " / ";
 	private static final String TITLE_PHASE_END = " =====";
+	private static final String SHOW_BOSS_START = " - Jefe (vidas: ";
+	private static final String SHOW_BOSS_END = ")";
 
 	private static ArrayList<Character> characters = new ArrayList<>();
 	private static Scanner scanner = new Scanner(System.in);
@@ -116,7 +118,10 @@ public class Main {
 		System.out.println();
 		System.out.println(TITLE_CHARACTERS);
 		for (int i = 0; i < characters.size(); i++) {
-			if (characters.get(i).isEnemy()) {
+			Character character = characters.get(i);
+			if (character instanceof Boss) {
+				System.out.println(i + SHOW_BOSS_START + ((Boss) character).getLives() + SHOW_BOSS_END);
+			} else if (character.isEnemy()) {
 				System.out.println(i + SHOW_ENEMY);
 			} else {
 				System.out.println(i + SHOW_FRIEND);
