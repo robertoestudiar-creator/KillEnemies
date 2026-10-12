@@ -12,7 +12,7 @@ import java.util.Scanner;
 
 public class Main {
 
-	private static final int NUM_FRIENDS = 5;
+	private static final int FRIENDS_PER_PHASE = 5;
 	private static final String HERO_NAME_PROMPT = "Introduce el nombre de tu héroe: ";
 	private static final String COUNT_FRIENDS = "Amigos: ";
 	private static final String COUNT_ENEMIES = "Enemigos: ";
@@ -21,12 +21,18 @@ public class Main {
 	private static final int EXIT = 0;
 	private static final int ATTACK = 1;
 	private static final int DEFEND = 2;
-	private static final String OPTION_ATTACK = "1 - Atacar";
-	private static final String OPTION_DEFEND = "2 - Defender";
-	private static final String OPTION_EXIT = "0 - Salir";
+	private static final int NO_SELECTION = -1;
+	private static final int NOT_FOUND = -1;
+	private static final int FIRST_PHASE = 1;
+	private static final int NORMAL_DAMAGE = 1;
+	private static final int DOUBLE_DAMAGE = 2;
+	private static final String OPTION_ATTACK = ATTACK + " - Atacar";
+	private static final String OPTION_DEFEND = DEFEND + " - Defender";
+	private static final String OPTION_EXIT = EXIT + " - Salir";
 	private static final String OPTION_PROMPT = "Elige una opción: ";
 	private static final String INDEX_PROMPT = "Elige el índice del personaje: ";
-	private static final String GAME_VERSION = "5.0";
+	private static final String INVALID_NUMBER = "Eso no es un número, prueba otra vez: ";
+	private static final String GAME_VERSION = "5.1";
 	private static final String SAVE_FILE = "partida.dat";
 	private static final String SAVE_ERROR = "No se ha podido guardar la partida";
 	private static final String VERSION_ERROR = "La versión del juego no coincide con la partida guardada";
@@ -37,7 +43,7 @@ public class Main {
 	private static final String TITLE_CHARACTERS = "----- PERSONAJES -----";
 	private static final String TITLE_OPTIONS = "----- ¿QUÉ QUIERES HACER? -----";
 	private static final int MAX_PHASE = 8;
-	private static final int EXTRA_ENEMIES = 2;
+	private static final int BASE_ENEMIES = 2;
 	private static final int BOSS_LIVES = 6;
 	private static final String TITLE_PHASE_START = "===== FASE ";
 	private static final String TITLE_PHASE_SEPARATOR = " / ";
@@ -47,6 +53,8 @@ public class Main {
 	private static final String PHASE_CLEARED = "¡Fase superada!";
 	private static final String DOUBLE_HIT_MESSAGE = "¡GOLPE DOBLE!";
 	private static final String SPECIAL_DEFEND_MESSAGE = "¡HABILIDAD ESPECIAL!";
+	private static final String FRIEND_KILLED_MESSAGE = "¡Oh no! Has matado a un amigo";
+	private static final String ENEMY_DUPLICATED_MESSAGE = "¡El enemigo se ha duplicado!";
 	private static final String WIN_MESSAGE = "¡Has ganado el juego!";
 	private static final String TITLE_STATS = "----- ESTADÍSTICAS -----";
 	private static final String STATS_HERO = "Héroe: ";
@@ -56,7 +64,7 @@ public class Main {
 	private static ArrayList<Character> characters = new ArrayList<>();
 	private static Scanner scanner = new Scanner(System.in);
 	private static Hero hero;
-	private static int phase = 1;
+	private static int phase = FIRST_PHASE;
 	private static int deadFriends = 0;
 
 	public static void main(String[] args) {
@@ -64,7 +72,7 @@ public class Main {
 		boolean loaded = false;
 		if (new File(SAVE_FILE).exists()) {
 			loaded = loadGame();
-			if (!loaded && !deleteSave()) {
+			if (!loaded && !askToDeleteSave()) {
 				return;
 			}
 		}
@@ -106,10 +114,10 @@ public class Main {
 		characters.clear();
 		deadFriends = 0;
 		if (phase == MAX_PHASE) {
-			createCharacters(NUM_FRIENDS, 0);
+			createCharacters(FRIENDS_PER_PHASE, 0);
 			characters.add(new Boss(BOSS_LIVES));
 		} else {
-			createCharacters(NUM_FRIENDS, phase + EXTRA_ENEMIES);
+			createCharacters(FRIENDS_PER_PHASE, phase + BASE_ENEMIES);
 		}
 		shuffleCharacters();
 	}
@@ -117,10 +125,10 @@ public class Main {
 	private static void showPhase() {
 		System.out.println();
 		System.out.println(TITLE_PHASE_START + phase + TITLE_PHASE_SEPARATOR + MAX_PHASE + TITLE_PHASE_END);
-		countCharacters();
+		showCount();
 	}
 
-	private static void countCharacters() {
+	private static void showCount() {
 		System.out.println();
 		System.out.println(TITLE_COUNT);
 		int friends = 0;
@@ -160,6 +168,16 @@ public class Main {
 		return false;
 	}
 
+	private static int readNumber() {
+		while (true) {
+			try {
+				return Integer.parseInt(scanner.nextLine().trim());
+			} catch (NumberFormatException e) {
+				System.out.print(INVALID_NUMBER);
+			}
+		}
+	}
+
 	private static int askOption() {
 		System.out.println();
 		System.out.println(TITLE_OPTIONS);
@@ -169,7 +187,7 @@ public class Main {
 		System.out.println(OPTION_DEFEND);
 		System.out.println(OPTION_EXIT);
 		System.out.print(OPTION_PROMPT);
-		return Integer.parseInt(scanner.nextLine());
+		return readNumber();
 	}
 
 	private static int firstEnemyIndex() {
@@ -178,14 +196,14 @@ public class Main {
 				return i;
 			}
 		}
-		return -1;
+		return NOT_FOUND;
 	}
 
 	private static int askIndex() {
-		int index = -1;
+		int index = NO_SELECTION;
 		while (index < 0 || index >= characters.size()) {
 			System.out.print(INDEX_PROMPT);
-			index = Integer.parseInt(scanner.nextLine());
+			index = readNumber();
 		}
 		return index;
 	}
@@ -207,27 +225,28 @@ public class Main {
 	private static void hitFirstEnemy() {
 		int index = firstEnemyIndex();
 		if (index >= 0) {
-			attackEnemy(index, 1);
+			attackEnemy(index, NORMAL_DAMAGE);
 		}
 	}
 
 	private static void attackCharacter(int index) {
-		boolean special = hero.isSpecial();
-		if (special) {
+		boolean doubleHit = hero.isSpecial();
+		if (doubleHit) {
 			System.out.println(DOUBLE_HIT_MESSAGE);
 		}
 		Character character = characters.get(index);
-		if (character instanceof Boss && special) {
-			attackEnemy(index, 2);
+		if (character instanceof Boss && doubleHit) {
+			attackEnemy(index, DOUBLE_DAMAGE);
 		} else if (character.isEnemy()) {
-			attackEnemy(index, 1);
-			if (special) {
+			attackEnemy(index, NORMAL_DAMAGE);
+			if (doubleHit) {
 				hitFirstEnemy();
 			}
 		} else {
+			System.out.println(FRIEND_KILLED_MESSAGE);
 			characters.remove(index);
 			deadFriends++;
-			if (special) {
+			if (doubleHit) {
 				hitFirstEnemy();
 			}
 		}
@@ -242,7 +261,7 @@ public class Main {
 		} else {
 			int index = firstEnemyIndex();
 			if (index >= 0 && characters.get(index) instanceof Boss) {
-				attackEnemy(index, 1);
+				attackEnemy(index, NORMAL_DAMAGE);
 			} else if (index >= 0) {
 				hero.counterattack((Enemy) characters.get(index));
 				characters.remove(index);
@@ -253,6 +272,7 @@ public class Main {
 	private static void defendCharacter(int index) {
 		Character character = characters.get(index);
 		if (character.isEnemy()) {
+			System.out.println(ENEMY_DUPLICATED_MESSAGE);
 			characters.add(new Enemy());
 		} else {
 			hero.defend((Friend) character);
@@ -280,7 +300,7 @@ public class Main {
 	}
 
 	private static void play() {
-		int option = -1;
+		int option = NO_SELECTION;
 		while (option != EXIT && phase <= MAX_PHASE) {
 			showCharacters();
 			option = askOption();
@@ -307,6 +327,7 @@ public class Main {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	private static boolean loadGame() {
 		try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(SAVE_FILE))) {
 			Object version = in.readObject();
@@ -323,7 +344,7 @@ public class Main {
 		}
 	}
 
-	private static boolean deleteSave() {
+	private static boolean askToDeleteSave() {
 		System.out.println(VERSION_ERROR);
 		System.out.print(DELETE_PROMPT);
 		String answer = scanner.nextLine();
