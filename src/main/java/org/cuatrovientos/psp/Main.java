@@ -24,6 +24,7 @@ public class Main {
 		createHero();
 		createCharacters(NUM_FRIENDS, NUM_ENEMIES);
 		shuffleCharacters();
+		countCharacters();
 		killEnemies();
 	}
 
