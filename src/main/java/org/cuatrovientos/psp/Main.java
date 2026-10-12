@@ -34,10 +34,12 @@ public class Main {
 	private static final String TITLE_COUNT = "----- RECUENTO -----";
 	private static final String TITLE_CHARACTERS = "----- PERSONAJES -----";
 	private static final String TITLE_OPTIONS = "----- ¿QUÉ QUIERES HACER? -----";
+	private static final int MAX_PHASE = 8;
 
 	private static ArrayList<Character> characters = new ArrayList<>();
 	private static Scanner scanner = new Scanner(System.in);
 	private static Hero hero;
+	private static int phase = 1;
 
 	public static void main(String[] args) {
 		System.out.println(TITLE_GAME);
