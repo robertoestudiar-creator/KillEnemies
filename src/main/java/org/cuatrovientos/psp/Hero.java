@@ -7,6 +7,7 @@ public class Hero implements Character {
 	private static final String ATTACK_MESSAGE = "¡He atacado a un enemigo!";
 	private static final String DEFEND_MESSAGE = "¡He defendido a un amigo!";
 	private static final int SPECIAL_CHANCE = 10;
+	private static final int PERCENT = 100;
 	private static final String SPECIAL_NAME = "Roberto";
 	private static final String EASTER_EGG_MESSAGE = "Bonito nombre, buen señor.";
 	private static final String REVIVE_MESSAGE = "¡He revivido a un aliado!";
@@ -52,7 +53,7 @@ public class Hero implements Character {
 		if (alwaysSpecial) {
 			return true;
 		}
-		return random.nextInt(100) < SPECIAL_CHANCE;
+		return random.nextInt(PERCENT) < SPECIAL_CHANCE;
 	}
 
 	public void attackBoss(Boss boss, int damage) {
