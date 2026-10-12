@@ -47,6 +47,7 @@ public class Main {
 	private static Scanner scanner = new Scanner(System.in);
 	private static Hero hero;
 	private static int phase = 1;
+	private static int deadFriends = 0;
 
 	public static void main(String[] args) {
 		System.out.println(TITLE_GAME);
@@ -82,6 +83,7 @@ public class Main {
 
 	private static void createPhase() {
 		characters.clear();
+		deadFriends = 0;
 		if (phase == MAX_PHASE) {
 			createCharacters(NUM_FRIENDS, 0);
 			characters.add(new Boss(BOSS_LIVES));
@@ -169,6 +171,8 @@ public class Main {
 		} else {
 			if (character.isEnemy()) {
 				hero.attack((Enemy) character);
+			} else {
+				deadFriends++;
 			}
 			characters.remove(index);
 		}
