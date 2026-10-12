@@ -271,8 +271,11 @@ public class Main {
 
 	private static void saveGame() {
 		try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(SAVE_FILE))) {
+			out.writeObject(GAME_VERSION);
 			out.writeObject(characters);
 			out.writeObject(hero);
+			out.writeInt(phase);
+			out.writeInt(deadFriends);
 		} catch (IOException e) {
 			System.out.println(SAVE_ERROR);
 		}
