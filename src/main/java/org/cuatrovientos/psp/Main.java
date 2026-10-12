@@ -196,13 +196,16 @@ public class Main {
 
 	private static void play() {
 		int option = -1;
-		while (option != EXIT) {
+		while (option != EXIT && phase <= MAX_PHASE) {
 			showCharacters();
 			option = askOption();
 			if (option == ATTACK && hasEnemies()) {
 				attackCharacter(askIndex());
 			} else if (option == DEFEND && !characters.isEmpty()) {
 				defendCharacter(askIndex());
+			}
+			if (!hasEnemies()) {
+				nextPhase();
 			}
 		}
 	}
