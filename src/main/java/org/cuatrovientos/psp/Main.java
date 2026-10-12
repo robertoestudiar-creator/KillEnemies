@@ -26,6 +26,7 @@ public class Main {
 	private static final String OPTION_EXIT = "0 - Salir";
 	private static final String OPTION_PROMPT = "Elige una opción: ";
 	private static final String INDEX_PROMPT = "Elige el índice del personaje: ";
+	private static final String INVALID_NUMBER = "Eso no es un número, prueba otra vez: ";
 	private static final String GAME_VERSION = "5.0";
 	private static final String SAVE_FILE = "partida.dat";
 	private static final String SAVE_ERROR = "No se ha podido guardar la partida";
@@ -160,6 +161,16 @@ public class Main {
 		return false;
 	}
 
+	private static int readNumber() {
+		while (true) {
+			try {
+				return Integer.parseInt(scanner.nextLine().trim());
+			} catch (NumberFormatException e) {
+				System.out.print(INVALID_NUMBER);
+			}
+		}
+	}
+
 	private static int askOption() {
 		System.out.println();
 		System.out.println(TITLE_OPTIONS);
@@ -169,7 +180,7 @@ public class Main {
 		System.out.println(OPTION_DEFEND);
 		System.out.println(OPTION_EXIT);
 		System.out.print(OPTION_PROMPT);
-		return Integer.parseInt(scanner.nextLine());
+		return readNumber();
 	}
 
 	private static int firstEnemyIndex() {
@@ -185,7 +196,7 @@ public class Main {
 		int index = -1;
 		while (index < 0 || index >= characters.size()) {
 			System.out.print(INDEX_PROMPT);
-			index = Integer.parseInt(scanner.nextLine());
+			index = readNumber();
 		}
 		return index;
 	}
