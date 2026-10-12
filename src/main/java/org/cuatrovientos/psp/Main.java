@@ -1,5 +1,8 @@
 package org.cuatrovientos.psp;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Scanner;
@@ -21,6 +24,8 @@ public class Main {
 	private static final String OPTION_EXIT = "0 - Salir";
 	private static final String OPTION_PROMPT = "Elige una opción: ";
 	private static final String INDEX_PROMPT = "Elige el índice del personaje: ";
+	private static final String SAVE_FILE = "partida.dat";
+	private static final String SAVE_ERROR = "No se ha podido guardar la partida";
 
 	private static ArrayList<Character> characters = new ArrayList<>();
 	private static Scanner scanner = new Scanner(System.in);
@@ -132,6 +137,15 @@ public class Main {
 			} else if (option == DEFEND && !characters.isEmpty()) {
 				defendCharacter(askIndex());
 			}
+		}
+	}
+
+	private static void saveGame() {
+		try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(SAVE_FILE))) {
+			out.writeObject(characters);
+			out.writeObject(hero);
+		} catch (IOException e) {
+			System.out.println(SAVE_ERROR);
 		}
 	}
 
