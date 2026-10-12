@@ -30,6 +30,7 @@ public class Hero implements Character {
 
 	public void defend(Friend friend) {
 		System.out.println(DEFEND_MESSAGE);
+		friend.heal();
 		defendedFriends++;
 	}
 
