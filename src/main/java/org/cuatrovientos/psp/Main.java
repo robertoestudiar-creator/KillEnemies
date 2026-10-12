@@ -33,6 +33,7 @@ public class Main {
 	private static final String TITLE_GAME = "===== KILL ENEMIES =====";
 	private static final String TITLE_COUNT = "----- RECUENTO -----";
 	private static final String TITLE_CHARACTERS = "----- PERSONAJES -----";
+	private static final String TITLE_OPTIONS = "----- ¿QUÉ QUIERES HACER? -----";
 
 	private static ArrayList<Character> characters = new ArrayList<>();
 	private static Scanner scanner = new Scanner(System.in);
@@ -109,6 +110,8 @@ public class Main {
 	}
 
 	private static int askOption() {
+		System.out.println();
+		System.out.println(TITLE_OPTIONS);
 		if (hasEnemies()) {
 			System.out.println(OPTION_ATTACK);
 		}
